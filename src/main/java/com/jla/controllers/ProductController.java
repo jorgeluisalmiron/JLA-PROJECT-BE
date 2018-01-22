@@ -33,16 +33,12 @@ public class ProductController {
 		try {
 
 			List<Product> list = service.findAll();
-			return new ResponseEntity<List<Product>>(list, HttpStatus.OK);
+			return new ResponseEntity<>(list, HttpStatus.OK);
 
 		} catch (Exception e) {
-
-			logger.info(e.toString());
-
-			return new ResponseEntity<List<Product>>(HttpStatus.INTERNAL_SERVER_ERROR);
-
+			logger.error(e.toString());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -53,17 +49,17 @@ public class ProductController {
 			return ResponseEntity.status(HttpStatus.OK).body(createdProduct);
 
 		} catch (CustomException e) {
-
+			logger.error(e.toString());
 			switch (e.getExceptionId()) {
 			case 1:
 					return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ResponseMessage(1,e.getMessage()));
 			default:
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(500,e.getMessage()));
+					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(500,e.getMessage()));
 		
 			}
 			
 		} catch (Exception e) {
-
+			logger.error(e.toString());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(500,e.getMessage()));
 	
 		}
@@ -76,9 +72,8 @@ public class ProductController {
 			service.delete(id);
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(0,"Success"));
 		} catch (Exception e) {
-	
+			logger.error(e.toString());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(500,e.getMessage()));
-			
 		}
 	}
 
@@ -89,6 +84,7 @@ public class ProductController {
 			Product product = service.findById(id);
 			return ResponseEntity.status(HttpStatus.OK).body(product);
 		} catch (CustomException e) {
+			logger.error(e.toString());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(500,e.getMessage()));
 			
 		}
@@ -101,7 +97,7 @@ public class ProductController {
 			service.update(product);
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(1,"Success"));
 		} catch (Exception e) {
-
+			logger.error(e.toString());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(500,e.getMessage()));
 		}
 	}
@@ -117,9 +113,8 @@ public class ProductController {
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ResponseMessage(1,e.getMessage()));
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			logger.error(e.toString());
 		 	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(500,e.getMessage()));
-
 		}
 	 }
 	 
